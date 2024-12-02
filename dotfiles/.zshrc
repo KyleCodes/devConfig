@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # Great tutorial. pdf located in vc in case website goes down
 # https://www.josean.com/posts/how-to-setup-alacritty-terminal
 
@@ -11,7 +18,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time Oh My Zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -99,7 +106,11 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+bindkey "\eb" backward-word         # Option + Left
+bindkey "\ef" forward-word          # Option + Right
+bindkey "\e[H" beginning-of-line    # Cmd + Left
+bindkey "\e[F" end-of-line         # Cmd + Right
 
 
 # history setup
@@ -111,11 +122,24 @@ setopt hist_expire_dups_first
 setopt hist_ignore_dups
 setopt hist_verify
 
+# enable auto suggestions as you type
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+
 # completion using arrow keys (based on history)
 bindkey '^[[A' history-search-backward
 bindkey '^[[B' history-search-forward
+
+# visual feedback of whether commands are spelled correctly
 source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+# Zoxide (better cd) -- shortcut to frequently accessed directories
+eval "$(zoxide init zsh)"
 
-# ---- Eza (better ls) -----
-alias ls="eza --icons=always"
+export EDITOR=nvim
+export VISUAL=nvim
+export PAGER="less -S"
+
+export DEFAULT_USER="$(whoami)"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
